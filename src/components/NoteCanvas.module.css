@@ -1,0 +1,62 @@
+.canvasContainer {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.mainCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.overlayCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.textBlock {
+  position: absolute;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-weight: 400;
+  white-space: pre-wrap;
+  pointer-events: all;
+  cursor: default;
+  line-height: 1.4;
+  transform: translateY(-50%);
+  max-width: 400px;
+  word-break: break-word;
+}
+
+.textBlock:hover {
+  background: rgba(0,122,255,0.05);
+  border-radius: 4px;
+  outline: 1px dashed rgba(0,122,255,0.3);
+}
+
+.textInputOverlay {
+  position: absolute;
+  background: rgba(255,255,255,0.95);
+  border: 2px solid #007aff;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  line-height: 1.4;
+  min-width: 120px;
+  min-height: 36px;
+  resize: both;
+  outline: none;
+  box-shadow: 0 4px 16px rgba(0,122,255,0.2);
+  z-index: 10;
+  transform: translateY(-50%);
+  -webkit-user-select: text;
+  user-select: text;
+  touch-action: auto;
+}

@@ -1,0 +1,62 @@
+:root {
+  --sidebar-width: 260px;
+  --notelist-width: 280px;
+  --toolbar-height: 56px;
+  --accent: #007aff;
+  --accent-hover: #0062cc;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f2f2f7;
+  --bg-tertiary: #e5e5ea;
+  --text-primary: #1c1c1e;
+  --text-secondary: #636366;
+  --text-tertiary: #aeaeb2;
+  --border: #d1d1d6;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+body {
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+input {
+  font-family: inherit;
+}

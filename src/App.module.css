@@ -1,0 +1,85 @@
+.app {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.noteArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.emptyState {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+}
+
+.emptyContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  max-width: 320px;
+  padding: 40px;
+}
+
+.emptyIllustration {
+  opacity: 0.8;
+  margin-bottom: 8px;
+}
+
+.emptyContent h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.emptyContent p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.createNoteBtn {
+  margin-top: 8px;
+  padding: 12px 28px;
+  background: var(--accent);
+  color: white;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.createNoteBtn:hover {
+  background: var(--accent-hover);
+  transform: scale(1.02);
+}
+
+.createNoteBtn:active {
+  transform: scale(0.98);
+}
+
+/* iPad media queries */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 240px;
+    --notelist-width: 260px;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --notelist-width: 100vw;
+  }
+}
