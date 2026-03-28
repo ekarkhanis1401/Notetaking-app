@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+}
+
+/* Tiptap editor styles */
+.tiptap-editor .ProseMirror {
+  outline: none;
+  min-height: 100%;
+  padding: 48px 56px;
+  font-size: 16px;
+  line-height: 1.75;
+  color: #1a1a1a;
+}
+
+.tiptap-editor .ProseMirror p {
+  margin: 0 0 0.5em 0;
+}
+
+.tiptap-editor .ProseMirror h1 {
+  font-size: 2em;
+  font-weight: 700;
+  margin: 0.67em 0;
+  line-height: 1.2;
+}
+
+.tiptap-editor .ProseMirror h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 0.75em 0;
+  line-height: 1.3;
+}
+
+.tiptap-editor .ProseMirror h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin: 1em 0;
+  line-height: 1.4;
+}
+
+.tiptap-editor .ProseMirror ul,
+.tiptap-editor .ProseMirror ol {
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+
+.tiptap-editor .ProseMirror li {
+  margin: 0.25em 0;
+}
+
+.tiptap-editor .ProseMirror strong {
+  font-weight: 700;
+}
+
+.tiptap-editor .ProseMirror em {
+  font-style: italic;
+}
+
+.tiptap-editor .ProseMirror u {
+  text-decoration: underline;
+}
+
+.tiptap-editor .ProseMirror mark {
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Paper lines for note editor */
+.paper-lines {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    #e8e6d9 27px,
+    #e8e6d9 28px
+  );
+  background-position: 0 48px;
+}
+
+/* Canvas drawing cursor */
+.drawing-canvas {
+  cursor: crosshair;
+}
+
+.eraser-cursor {
+  cursor: cell;
+}
+
+/* Smooth transitions */
+.panel-transition {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Color picker styles */
+.color-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.1s ease;
+}
+
+.color-swatch:active {
+  transform: scale(0.9);
+}
+
+.color-swatch.selected {
+  border-color: white;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.3);
+  transform: scale(1.1);
+}
+
+/* Toolbar button active state */
+.toolbar-btn {
+  transition: background-color 0.1s ease, transform 0.1s ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.toolbar-btn:active {
+  transform: scale(0.95);
+}
