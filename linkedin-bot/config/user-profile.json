@@ -1,0 +1,62 @@
+{
+  "_instructions": "This file controls bot behavior and your professional preferences. Customize everything here.",
+  "applicant": {
+    "name": "Your Full Name",
+    "currentRole": "Your Current Title",
+    "yearsOfExperience": 5,
+    "targetRoles": [
+      "Senior Software Engineer",
+      "Staff Engineer",
+      "Engineering Manager"
+    ],
+    "targetIndustries": [
+      "FinTech",
+      "SaaS",
+      "Healthcare Tech",
+      "AI / ML"
+    ],
+    "preferredLocations": [
+      "Remote",
+      "New York, NY",
+      "San Francisco, CA"
+    ],
+    "salaryExpectation": "$150,000 – $200,000",
+    "noticePeriod": "2 weeks",
+    "workAuthorization": "US Citizen / No sponsorship required",
+    "willingToRelocate": false
+  },
+  "tone": {
+    "resume": "professional, concise, achievement-oriented",
+    "coverLetter": "warm, confident, storytelling, humanized — NOT robotic or generic",
+    "recruiterMessage": "personable, direct, respectful of their time, compelling"
+  },
+  "connectionMessage": {
+    "style": "brief and human — 2-3 sentences max (LinkedIn note limit is 300 chars)",
+    "mentionMutualInterest": true,
+    "mentionSpecificRole": true
+  },
+  "recruiterMessageTemplate": {
+    "maxWords": 120,
+    "openWith": "specific compliment or observation about their company / role",
+    "includeValueProp": true,
+    "closeWith": "low-friction CTA — ask for a quick call or their thoughts, not 'please review my resume'"
+  },
+  "jobFilters": {
+    "skipIfAlreadyApplied": true,
+    "skipIfJobOlderThanDays": 14,
+    "skipKeywords": [
+      "unpaid",
+      "internship",
+      "no experience needed",
+      "commission only"
+    ],
+    "requireKeywords": [],
+    "minSeniority": "mid-level"
+  },
+  "application": {
+    "coverLetterRequired": true,
+    "attachResumePDF": true,
+    "answerScreeningQuestions": true,
+    "useEasyApplyOnly": true
+  }
+}

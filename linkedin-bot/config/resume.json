@@ -1,0 +1,101 @@
+{
+  "_instructions": "Fill in ALL sections with your real information. This is the master resume that Claude will tailor per job.",
+  "personal": {
+    "name": "Your Full Name",
+    "title": "Your Current / Desired Job Title",
+    "email": "your.email@example.com",
+    "phone": "+1 (555) 000-0000",
+    "location": "City, State, Country",
+    "linkedin": "https://linkedin.com/in/your-profile",
+    "portfolio": "https://yourportfolio.com",
+    "github": "https://github.com/yourusername"
+  },
+  "summary": "A results-driven [Your Profession] with X+ years of experience in [Key Skills]. Passionate about [Domain] and proven track record of [Key Achievement]. Seeking to bring [Value Proposition] to a forward-thinking organization.",
+  "skills": {
+    "technical": [
+      "JavaScript / TypeScript",
+      "React / Next.js",
+      "Node.js",
+      "Python",
+      "SQL / PostgreSQL",
+      "AWS / GCP",
+      "Docker / Kubernetes",
+      "REST APIs / GraphQL"
+    ],
+    "soft": [
+      "Cross-functional collaboration",
+      "Stakeholder communication",
+      "Agile / Scrum",
+      "Mentoring & team leadership",
+      "Problem solving"
+    ],
+    "tools": [
+      "Git / GitHub",
+      "Jira / Confluence",
+      "Figma",
+      "VS Code",
+      "Postman"
+    ]
+  },
+  "experience": [
+    {
+      "company": "Current / Most Recent Company",
+      "title": "Your Job Title",
+      "location": "City, State",
+      "startDate": "Jan 2022",
+      "endDate": "Present",
+      "bullets": [
+        "Led development of X feature that increased Y metric by Z%, driving $N in annual revenue.",
+        "Architected and shipped a microservices migration that reduced p99 latency from 800ms to 120ms.",
+        "Mentored 3 junior engineers, establishing code-review standards adopted across 2 teams.",
+        "Collaborated with product and design to define roadmap priorities, delivering 4 major releases on time."
+      ]
+    },
+    {
+      "company": "Previous Company",
+      "title": "Previous Job Title",
+      "location": "City, State",
+      "startDate": "Jun 2019",
+      "endDate": "Dec 2021",
+      "bullets": [
+        "Built and maintained RESTful APIs serving 500K+ daily active users with 99.9% uptime.",
+        "Reduced CI/CD pipeline duration by 40% by parallelising test suites and caching build artefacts.",
+        "Drove adoption of TypeScript across the front-end codebase, cutting production bug rate by 30%."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Your University",
+      "degree": "Bachelor of Science in Computer Science",
+      "location": "City, State",
+      "graduationYear": "2019",
+      "gpa": "3.8 / 4.0",
+      "honours": "Magna Cum Laude",
+      "relevantCourses": ["Data Structures", "Algorithms", "Distributed Systems", "Machine Learning"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Project Name",
+      "description": "One-line description of what it does and why it matters.",
+      "tech": ["React", "Node.js", "PostgreSQL"],
+      "link": "https://github.com/you/project",
+      "highlights": [
+        "Achieved X outcome with Y approach.",
+        "Used by N users / featured in Z publication."
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "AWS Certified Solutions Architect – Associate",
+      "issuer": "Amazon Web Services",
+      "year": "2023"
+    }
+  ],
+  "languages": [
+    { "language": "English", "proficiency": "Native" },
+    { "language": "Spanish", "proficiency": "Professional working proficiency" }
+  ]
+}
