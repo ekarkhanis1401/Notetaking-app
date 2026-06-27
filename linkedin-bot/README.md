@@ -1,20 +1,45 @@
-# LinkedIn Job Bot — AI-Powered Job Application Assistant
+# LinkedIn Job Bot — AI Agent Team
 
-Automates your LinkedIn saved-job workflow end-to-end using **Claude AI** and **Playwright** browser automation.
+An autonomous **multi-agent system** that handles your entire LinkedIn job-application workflow. Seven specialised AI agents collaborate — running in parallel where possible — to apply for jobs and reach out to recruiters on your behalf.
 
-## What It Does
+---
 
-| Step | Action |
-|---|---|
-| 1 | Logs into LinkedIn (persists session — only logs in once) |
-| 2 | Scrapes your **Saved Jobs** list |
-| 3 | Sends the job description to **Claude AI**, which **tailors your resume** to mirror the JD's language and priorities |
-| 4 | Claude writes a **humanized, story-driven cover letter** (not a generic template) |
-| 5 | Generates **PDF files** for both resume and cover letter |
-| 6 | Submits the application via **LinkedIn Easy Apply**, filling in all form fields and screening questions automatically |
-| 7 | Finds the **hiring manager or recruiter** for the role |
-| 8 | Sends a **personalized connection request** with a custom note (≤ 300 chars) |
-| 9 | Sends a **compelling LinkedIn DM** designed to start a conversation, not beg for a referral |
+## Agent Team
+
+| Agent | Role | AI? |
+|---|---|---|
+| **OrchestratorAgent** | Master coordinator — plans workflow, fans out work, handles failures | Claude AI |
+| **JobScoutAgent** | Scrapes LinkedIn Saved Jobs, applies filters, queues valid listings | Browser |
+| **ResumeTailorAgent** | Rewrites your master resume to mirror each JD's language and priorities | Claude AI |
+| **CoverLetterAgent** | Writes a humanized story-driven cover letter (hook → achievement → fit → CTA) | Claude AI |
+| **ApplicationAgent** | Fills and submits LinkedIn Easy Apply forms, answers screening questions | Claude AI + Browser |
+| **RecruiterHunterAgent** | Finds the hiring manager or recruiter from the job listing or LinkedIn search | Browser |
+| **OutreachAgent** | Sends a personalized connection request note + compelling follow-up DM | Claude AI + Browser |
+
+---
+
+## How They Collaborate
+
+```
+OrchestratorAgent
+    │
+    ├─ 1. JobScoutAgent ──────────────────────── discovers & filters saved jobs
+    │
+    └─ For each job:
+        │
+        ├─ Phase A (documents):
+        │   ├─ ResumeTailorAgent ─────────────── tailors resume to JD
+        │   └─ CoverLetterAgent ──────────────── writes cover letter
+        │
+        ├─ Phase B (parallel):
+        │   ├─ ApplicationAgent ────────────────── Easy Apply submission
+        │   └─ RecruiterHunterAgent ──────────── finds recruiter/HM
+        │
+        └─ Phase C (outreach):
+            └─ OutreachAgent ─────────────────── connection note + DM
+```
+
+**Agents communicate via a shared event bus** — no tight coupling. Each agent publishes events (`jobs:discovered`, `resume:ready`, `recruiter:found`, etc.) and the orchestrator coordinates.
 
 ---
 
@@ -28,76 +53,69 @@ npm install
 npx playwright install chromium
 ```
 
-### 2. Configure your credentials
+### 2. Configure credentials
 
 ```bash
 cp .env.example .env
 ```
 
 Edit `.env`:
-
 ```env
 LINKEDIN_EMAIL=you@example.com
 LINKEDIN_PASSWORD=your_password
 ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-### 3. Fill in your resume data
+### 3. Fill in your resume
 
-Edit `config/resume.json` — this is your **master resume**. Claude uses it as the raw material and tailors it per job. Fill in every field accurately.
+Edit `config/resume.json` — this is the master resume all agents work from. Fill in every field with real information.
 
 ### 4. Set your preferences
 
-Edit `config/user-profile.json`:
-- Target roles, industries, and locations
-- Tone preferences for cover letters and recruiter messages
-- Job filters (max age, skip keywords, etc.)
+Edit `config/user-profile.json` to set your target roles, tone preferences, job filters, and outreach settings.
 
 ---
 
 ## Usage
 
 ```bash
-# Full run: apply + connect with recruiter (recommended)
-npm start
+# Full run: apply to all saved jobs + reach out to recruiters (recommended first time: dry-run)
+npm run start:dry-run       # generates PDFs + logs everything, submits nothing
+npm start                   # full agent team run
 
-# Only apply to jobs (no recruiter outreach)
-npm run start:apply
-
-# Only connect with recruiters (no applications)
-npm run start:connect
-
-# Dry run: generate PDFs and log everything, but submit nothing
-npm run start:dry-run
+# Targeted runs
+npm run start:apply         # only apply (no recruiter outreach)
+npm run start:connect       # only connect with recruiters (no applications)
 ```
+
+---
+
+## Agent Communication (Event Bus)
+
+Agents coordinate through a central `MessageBus` (event emitter). Key events:
+
+| Event | From | Carries |
+|---|---|---|
+| `jobs:discovered` | JobScoutAgent | Array of filtered job objects |
+| `resume:ready` | ResumeTailorAgent | `tailoredResume`, `resumePdfPath` |
+| `coverletter:ready` | CoverLetterAgent | `coverLetterText`, `coverLetterPdfPath` |
+| `job:applied` | ApplicationAgent | `jobId`, `title`, `company` |
+| `recruiter:found` | RecruiterHunterAgent | `recruiter` (name, title, profileUrl) |
+| `outreach:complete` | OutreachAgent | `connected`, `messageSent` |
+| `agent:status` | Any agent | `started` / `completed` lifecycle events |
+| `agent:error` | Any agent | Error details for orchestrator handling |
 
 ---
 
 ## Output
 
-All generated files are saved in `output/`:
-
 ```
 output/
-├── resumes/
-│   └── Resume_Your_Name_CompanyName_RoleName_20240601.pdf
-├── cover-letters/
-│   └── CoverLetter_Your_Name_CompanyName_RoleName_20240601.pdf
-├── logs/
-│   └── session-2024-06-01_09-30-00.log
-└── applied-jobs.json   ← tracks applied jobs to prevent re-applying
+├── resumes/                 ← Tailored PDF resume per job
+├── cover-letters/           ← Tailored PDF cover letter per job
+├── logs/                    ← Session logs with timestamps
+└── applied-jobs.json        ← Applied-job registry (prevents re-applying)
 ```
-
----
-
-## Safety & Rate Limiting
-
-- **Human-like behavior**: random delays between every action, natural typing speed, realistic mouse movement
-- **Job cooldown**: configurable 30–90 second pause between applications (see `.env`)
-- **Session persistence**: browser cookies are saved in `browser-data/` — you only log in once
-- **Applied-job tracking**: `output/applied-jobs.json` prevents re-applying to the same role
-- **Age filter**: skips jobs older than N days (configurable in `user-profile.json`)
-- **Keyword filters**: skip jobs containing undesired keywords
 
 ---
 
@@ -106,32 +124,38 @@ output/
 ```
 linkedin-bot/
 ├── src/
-│   ├── index.js          ← Main orchestrator (entry point)
-│   ├── auth.js           ← LinkedIn login + session management
-│   ├── jobs.js           ← Scrape saved jobs + filtering
-│   ├── resume.js         ← Resume tailoring pipeline
-│   ├── coverLetter.js    ← Cover letter generation pipeline
-│   ├── apply.js          ← LinkedIn Easy Apply automation
-│   ├── recruiter.js      ← Recruiter finder + connection + messaging
-│   ├── claude.js         ← All Claude AI prompts (tailoring, writing, Q&A)
+│   ├── index.js                      ← Entry point
+│   ├── core/
+│   │   ├── agentBase.js              ← Abstract base class for all agents
+│   │   ├── messageBus.js             ← Shared event bus (pub/sub)
+│   │   ├── sharedState.js            ← Shared job-processing state
+│   │   └── browserPool.js            ← Singleton browser session
+│   ├── agents/
+│   │   ├── orchestratorAgent.js      ← Master coordinator (Claude AI)
+│   │   ├── jobScoutAgent.js          ← LinkedIn scraper
+│   │   ├── resumeTailorAgent.js      ← Resume tailoring (Claude AI)
+│   │   ├── coverLetterAgent.js       ← Cover letter writing (Claude AI)
+│   │   ├── applicationAgent.js       ← Easy Apply automation (Claude AI + Browser)
+│   │   ├── recruiterHunterAgent.js   ← Recruiter finder (Browser)
+│   │   └── outreachAgent.js          ← Connection + DM (Claude AI + Browser)
 │   └── utils/
-│       ├── humanize.js   ← Delays, typing, scrolling simulation
-│       ├── logger.js     ← Colored console + file logging
-│       └── pdf.js        ← HTML → PDF generation via Playwright
+│       ├── humanize.js               ← Random delays, typing, mouse simulation
+│       ├── logger.js                 ← Colored console + file logging
+│       └── pdf.js                    ← HTML → PDF via Playwright
 ├── templates/
-│   ├── resume.html       ← ATS-friendly resume template
-│   └── coverLetter.html  ← Professional cover letter template
-├── config/
-│   ├── resume.json       ← YOUR master resume data (fill this in!)
-│   └── user-profile.json ← Your job preferences and bot behavior settings
-└── output/               ← Generated files (gitignored)
+│   ├── resume.html                   ← ATS-friendly resume template
+│   └── coverLetter.html              ← Professional letterhead template
+└── config/
+    ├── resume.json                   ← YOUR master resume (fill this in!)
+    └── user-profile.json             ← Job preferences + bot behavior
 ```
 
 ---
 
-## Important Notes
+## Safety Notes
 
-- **LinkedIn ToS**: Automated scraping and actions may violate LinkedIn's Terms of Service. Use responsibly and at your own risk.
-- **2FA**: If LinkedIn prompts for 2-step verification, run with `HEADLESS=false` in your `.env` to see the browser and complete it manually.
-- **Easy Apply only**: The bot only applies to jobs with the Easy Apply button. External application sites require separate automation.
-- **Review before submitting**: Run with `--dry-run` first to review the generated resumes and cover letters before enabling auto-apply.
+- **LinkedIn ToS**: Automated scraping/automation may violate LinkedIn's Terms of Service. Use responsibly and at your own risk.
+- **2FA**: If LinkedIn triggers a challenge, set `HEADLESS=false` in `.env` to complete it manually.
+- **Rate limiting**: Built-in 30–90 second cooldowns between jobs. Agents use human-like typing and mouse movements.
+- **Easy Apply only**: The bot only applies to jobs with the Easy Apply button.
+- **Always dry-run first**: Run `npm run start:dry-run` to review generated resumes and cover letters before enabling live submission.
