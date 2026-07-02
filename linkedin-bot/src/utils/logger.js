@@ -61,8 +61,14 @@ export const logger = {
 
   /**
    * Print a compact summary table at the end of a session.
+   * Accepts either the SharedState summary object or a plain array of results.
    */
   sessionSummary(results) {
+    // Accept SharedState.getSessionSummary() object
+    if (results && typeof results === 'object' && !Array.isArray(results) && results.jobs) {
+      results = results.jobs;
+    }
+    if (!Array.isArray(results)) results = [];
     const applied = results.filter(r => r.applied).length;
     const connected = results.filter(r => r.connected).length;
     const messaged = results.filter(r => r.messageSent).length;

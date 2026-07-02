@@ -1,13 +1,15 @@
 /**
  * agentBase.js
- * Abstract base class for all agents in the team.
+ * Abstract base class for all AI agents.
  *
- * Every agent has:
- *  - A unique name and role description
- *  - Access to the shared message bus and state
- *  - Standardised lifecycle: init → run → teardown
- *  - Built-in status reporting via the bus
- *  - A private Claude AI client for agents that need it
+ * DESIGN: Every agent runs a Claude-powered ReAct loop.
+ *   1. Claude receives a goal + available tools + context
+ *   2. Claude reasons and picks a tool to call
+ *   3. Agent executes the tool and feeds the result back to Claude
+ *   4. Loop repeats until Claude returns a final text answer (no tool call)
+ *
+ * Agents that are pure-AI (no browser) simply call _think() directly.
+ * Browser agents use _runAgentLoop() with their declared tool set.
  */
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -17,91 +19,131 @@ import { logger } from '../utils/logger.js';
 
 export class AgentBase {
   /**
-   * @param {string} name - Agent identifier (e.g. "ResumeTailorAgent")
-   * @param {string} role - One-line role description shown in logs
-   * @param {string} [systemPrompt] - Claude system prompt (only for AI agents)
+   * @param {string} name
+   * @param {string} role
+   * @param {string} systemPrompt  - Claude's persona and instructions for this agent
    */
-  constructor(name, role, systemPrompt = null) {
+  constructor(name, role, systemPrompt) {
     this.name = name;
     this.role = role;
     this._systemPrompt = systemPrompt;
     this._bus = bus;
     this._state = state;
-    this._status = 'idle'; // idle | running | done | failed
-    this._claude = systemPrompt
-      ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-      : null;
+    this._claude = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     this._model = process.env.CLAUDE_MODEL || 'claude-sonnet-4-6';
+    this._conversationHistory = []; // per-agent memory within a job
   }
 
-  // ── Lifecycle hooks (override in subclasses) ──────────────────────────────
+  // ── Lifecycle (subclasses override onRun) ─────────────────────────────────
 
-  /** Called once before the agent starts processing. */
   async onInit() {}
-
-  /** Main agent logic — must be implemented by subclasses. */
-  async onRun(input) {
-    throw new Error(`${this.name}.onRun() not implemented`);
-  }
-
-  /** Called after onRun completes or fails. */
+  async onRun(_input) { throw new Error(`${this.name}.onRun() not implemented`); }
   async onTeardown() {}
 
-  // ── Public run method ─────────────────────────────────────────────────────
-
-  /**
-   * Execute this agent with the given input.
-   * Handles status tracking, bus events, and error reporting automatically.
-   *
-   * @param {*} input - Agent-specific input data
-   * @returns {*} Agent-specific output
-   */
   async run(input) {
-    this._status = 'running';
-    this._publish('agent:status', { status: 'started', role: this.role });
-    this._log(`Starting...`);
-
+    this._conversationHistory = []; // reset for each new task
+    this._publish('agent:status', { status: 'started' });
+    this._log(`Starting — ${this.role}`);
     try {
       await this.onInit();
       const result = await this.onRun(input);
-      this._status = 'done';
-      this._publish('agent:status', { status: 'completed', role: this.role });
-      this._log(`Completed successfully.`);
+      this._publish('agent:status', { status: 'completed' });
+      this._log('Done.');
       return result;
     } catch (err) {
-      this._status = 'failed';
+      this._publish('agent:error', { error: err.message });
       this._log(`FAILED: ${err.message}`, 'error');
-      this._publish('agent:error', { error: err.message, role: this.role });
       throw err;
     } finally {
       await this.onTeardown().catch(() => {});
     }
   }
 
-  // ── Claude AI helper ──────────────────────────────────────────────────────
-
+  // ── ReAct loop ────────────────────────────────────────────────────────────
   /**
-   * Send a prompt to Claude and return the text response.
-   * Only available to agents that were constructed with a systemPrompt.
+   * Run a multi-turn Claude tool-use loop until Claude produces a final
+   * text answer (meaning it considers the task complete).
    *
-   * @param {string} userMessage
-   * @param {number} [maxTokens]
-   * @param {number} [retries]
+   * @param {string}   goal        - The task description sent to Claude
+   * @param {object[]} toolDefs    - Array of Anthropic tool schema objects
+   * @param {Function} toolHandler - (toolName, toolInput) => result string
+   * @param {number}   [maxTurns]  - Safety cap on iterations
+   * @returns {string} Claude's final reasoning / summary
    */
-  async _think(userMessage, maxTokens = 2000, retries = 3) {
-    if (!this._claude) throw new Error(`${this.name} has no Claude client (no systemPrompt set)`);
+  async _runAgentLoop(goal, toolDefs, toolHandler, maxTurns = 15) {
+    const messages = [
+      ...this._conversationHistory,
+      { role: 'user', content: goal },
+    ];
 
+    for (let turn = 0; turn < maxTurns; turn++) {
+      const response = await this._claude.messages.create({
+        model: this._model,
+        max_tokens: 4096,
+        system: this._systemPrompt,
+        tools: toolDefs,
+        messages,
+      });
+
+      // Append Claude's response to the conversation
+      messages.push({ role: 'assistant', content: response.content });
+
+      // If Claude stopped naturally (no tool call) → we're done
+      if (response.stop_reason === 'end_turn') {
+        const text = response.content
+          .filter(b => b.type === 'text')
+          .map(b => b.text)
+          .join('');
+        this._log(`[Turn ${turn + 1}] Concluded.`);
+        return text;
+      }
+
+      // Process all tool_use blocks in this response
+      const toolUseBlocks = response.content.filter(b => b.type === 'tool_use');
+      if (toolUseBlocks.length === 0) break;
+
+      const toolResults = [];
+      for (const block of toolUseBlocks) {
+        this._log(`[Turn ${turn + 1}] Claude calls → ${block.name}(${JSON.stringify(block.input).slice(0, 120)})`);
+        let result;
+        try {
+          result = await toolHandler(block.name, block.input);
+        } catch (err) {
+          result = `ERROR: ${err.message}`;
+        }
+        this._log(`[Turn ${turn + 1}] Result: ${String(result).slice(0, 200)}`);
+        toolResults.push({
+          type: 'tool_result',
+          tool_use_id: block.id,
+          content: String(result),
+        });
+      }
+
+      messages.push({ role: 'user', content: toolResults });
+    }
+
+    return '[Agent loop max turns reached]';
+  }
+
+  // ── Simple one-shot Claude call ───────────────────────────────────────────
+  /**
+   * Single-turn Claude call — for generation tasks (writing, JSON output).
+   * @param {string}   prompt
+   * @param {number}   [maxTokens]
+   * @param {number}   [retries]
+   */
+  async _think(prompt, maxTokens = 2000, retries = 3) {
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
         const response = await this._claude.messages.create({
           model: this._model,
           max_tokens: maxTokens,
           system: this._systemPrompt,
-          messages: [{ role: 'user', content: userMessage }],
+          messages: [{ role: 'user', content: prompt }],
         });
         return response.content[0].text.trim();
       } catch (err) {
-        this._log(`Claude attempt ${attempt}/${retries} failed: ${err.message}`, 'warn');
+        this._log(`Claude attempt ${attempt}/${retries}: ${err.message}`, 'warn');
         if (attempt === retries) throw err;
         await new Promise(r => setTimeout(r, 2000 * attempt));
       }
@@ -109,19 +151,12 @@ export class AgentBase {
   }
 
   // ── Bus helpers ───────────────────────────────────────────────────────────
+  _publish(event, payload) { this._bus.publish(event, payload, this.name); }
+  _subscribe(event, handler) { return this._bus.subscribe(event, handler); }
 
-  _publish(event, payload) {
-    this._bus.publish(event, payload, this.name);
-  }
-
-  _subscribe(event, handler) {
-    return this._bus.subscribe(event, handler);
-  }
-
-  // ── Logging helpers ────────────────────────────────────────────────────────
-
+  // ── Log helpers ────────────────────────────────────────────────────────────
   _log(msg, level = 'info') {
-    const prefix = `[${this.name}]`;
-    logger[level]?.(`${prefix} ${msg}`) ?? logger.info(`${prefix} ${msg}`);
+    const fn = logger[level] ?? logger.info;
+    fn(`[${this.name}] ${msg}`);
   }
 }
