@@ -9,15 +9,14 @@
 
 import { AgentBase } from '../core/agentBase.js';
 import { browserPool } from '../core/browserPool.js';
-import { readFileSync, existsSync, writeFileSync, mkdirSync } from 'fs';
+import { readFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { randomDelay, thinkingPause, humanScroll } from '../utils/humanize.js';
+import { loadAppliedJobIds, upsertJobRecord, TRACKER_PATH } from '../utils/tracker.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const OUTPUT_DIR = join(__dirname, '../../output');
-const APPLIED_LOG = join(OUTPUT_DIR, 'applied-jobs.json');
-mkdirSync(OUTPUT_DIR, { recursive: true });
+mkdirSync(join(__dirname, '../../output'), { recursive: true });
 
 const userProfile = JSON.parse(readFileSync(join(__dirname, '../../config/user-profile.json'), 'utf8'));
 const MAX_JOBS = parseInt(process.env.MAX_JOBS_PER_SESSION || '10', 10);
@@ -99,7 +98,21 @@ export class JobScoutAgent extends AgentBase {
     super(
       'JobScoutAgent',
       'Scouts and scores LinkedIn Saved Jobs',
-      `You are an expert job-fit analyst and LinkedIn job scout. Your job is to:
+      // System prompt is built async in onRun — placeholder here
+      'You are a LinkedIn job scout. Await task instructions.'
+    );
+    this._queuedJobs = [];
+    this._page = null;
+    this._appliedIds = new Set();
+  }
+
+  async onInit() {
+    // Load applied IDs from the Excel tracker before scouting
+    this._appliedIds = await loadAppliedJobIds();
+    this._log(`Loaded ${this._appliedIds.size} previously applied job(s) from Excel tracker (${TRACKER_PATH})`);
+
+    // Rebuild system prompt now that we have the applied IDs
+    this._systemPrompt = `You are an expert job-fit analyst and LinkedIn job scout. Your job is to:
 1. Navigate to the LinkedIn Saved Jobs page
 2. Scroll to load all job cards
 3. Click through each job card and read its details
@@ -113,13 +126,10 @@ ${JSON.stringify(userProfile.applicant, null, 2)}
 JOB FILTERS:
 ${JSON.stringify(userProfile.jobFilters, null, 2)}
 
-ALREADY APPLIED JOBS (skip these):
-${JSON.stringify(JobScoutAgent._loadAppliedIds(), null, 2)}
+ALREADY APPLIED JOBS — skip these job IDs (already in tracker):
+${JSON.stringify([...this._appliedIds], null, 2)}
 
-Be methodical. After navigating and scrolling, click each card in order, get its details, score it, then decide to queue or skip it. Call report_done when finished.`
-    );
-    this._queuedJobs = [];
-    this._page = null;
+Be methodical. After navigating and scrolling, click each card in order, get its details, score it, then decide to queue or skip it. Call report_done when finished.`;
   }
 
   async onRun() {
@@ -227,14 +237,20 @@ Reply with JSON: {"score": <0-100>, "rationale": "<1-2 sentences>"}. Nothing els
     }
   }
 
-  static _loadAppliedIds() {
-    if (!existsSync(APPLIED_LOG)) return [];
-    return JSON.parse(readFileSync(APPLIED_LOG, 'utf8')).map(j => j.jobId);
-  }
-
-  static recordApplied(job) {
-    const existing = existsSync(APPLIED_LOG) ? JSON.parse(readFileSync(APPLIED_LOG, 'utf8')) : [];
-    existing.push({ jobId: job.jobId, title: job.title, company: job.company, appliedAt: new Date().toISOString() });
-    writeFileSync(APPLIED_LOG, JSON.stringify(existing, null, 2));
+  /**
+   * Write an "Applied" row to the Excel tracker immediately after a successful
+   * application. Full session data is also written at end-of-session by the
+   * orchestrator — this call ensures the record exists even if the session crashes.
+   */
+  static async recordApplied(job) {
+    await upsertJobRecord({
+      jobId:   job.jobId,
+      title:   job.title,
+      company: job.company,
+      location: job.location,
+      url:     job.url,
+      applied: true,
+      status:  'done',
+    });
   }
 }

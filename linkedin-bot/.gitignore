@@ -10,5 +10,8 @@ output/cover-letters/
 output/logs/
 output/applied-jobs.json
 
+# Excel tracker (lives on your Desktop — not in the repo)
+*.xlsx
+
 # Node modules
 node_modules/

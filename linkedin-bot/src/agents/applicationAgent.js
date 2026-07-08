@@ -161,7 +161,7 @@ Navigate to the job, click Easy Apply, fill in all form steps completely, and su
     await this._runAgentLoop(goal, TOOLS, this._handleTool.bind(this));
 
     if (this._submitted) {
-      JobScoutAgent.recordApplied(job);
+      await JobScoutAgent.recordApplied(job);
       this._publish('job:applied', { jobId: job.jobId, title: job.title, company: job.company });
     }
 

@@ -21,6 +21,7 @@ import { OutreachAgent } from './outreachAgent.js';
 
 import { jobCooldown } from '../utils/humanize.js';
 import { logger } from '../utils/logger.js';
+import { writeSessionToTracker, TRACKER_PATH } from '../utils/tracker.js';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -338,6 +339,15 @@ Start with dispatch_job_scout to discover jobs, then for each discovered job: ta
 
   async onTeardown() {
     await browserPool.close();
+
+    // Write all processed jobs to the Excel tracker
+    const allJobs = state.getAllJobs();
+    if (allJobs.length > 0) {
+      logger.info(`[Orchestrator] Writing session results to Excel tracker → ${TRACKER_PATH}`);
+      await writeSessionToTracker(allJobs).catch(err =>
+        logger.error(`[Orchestrator] Excel tracker write failed: ${err.message}`)
+      );
+    }
   }
 
   _printBanner() {
