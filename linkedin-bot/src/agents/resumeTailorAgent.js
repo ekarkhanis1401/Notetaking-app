@@ -13,8 +13,17 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const baseResume = JSON.parse(readFileSync(join(__dirname, '../../config/resume.json'), 'utf8'));
-const userProfile = JSON.parse(readFileSync(join(__dirname, '../../config/user-profile.json'), 'utf8'));
+const generalResume  = JSON.parse(readFileSync(join(__dirname, '../../config/resume.json'), 'utf8'));
+const aerospaceResume = JSON.parse(readFileSync(join(__dirname, '../../config/resume-aerospace.json'), 'utf8'));
+const userProfile    = JSON.parse(readFileSync(join(__dirname, '../../config/user-profile.json'), 'utf8'));
+
+/** Pick the best base resume for this job based on aerospace keyword detection. */
+function selectBaseResume(job) {
+  const text = `${job.title} ${job.company} ${job.description}`.toLowerCase();
+  const isAerospace = (userProfile.resumeSelection?.aerospaceKeywords ?? [])
+    .some(kw => text.includes(kw.toLowerCase()));
+  return isAerospace ? aerospaceResume : generalResume;
+}
 
 const TOOLS = [
   {
@@ -52,10 +61,20 @@ const TOOLS = [
 
 export class ResumeTailorAgent extends AgentBase {
   constructor() {
-    super(
-      'ResumeTailorAgent',
-      'Tailors resumes to each job description',
-      `You are a world-class resume writer with 20 years of experience placing candidates at top tech companies.
+    // System prompt is set dynamically per job in onRun — placeholder here
+    super('ResumeTailorAgent', 'Tailors resumes to each job description', 'Await task instructions.');
+    this._lastTailoredResume = null;
+    this._baseResume = null;
+  }
+
+  async onRun({ job }) {
+    this._lastTailoredResume = null;
+    this._baseResume = selectBaseResume(job);
+    const resumeType = this._baseResume === aerospaceResume ? 'Aerospace' : 'General / Industrial';
+    this._log(`Using ${resumeType} base resume for: ${job.title} @ ${job.company}`);
+
+    // Build system prompt with the right base resume for this job
+    this._systemPrompt = `You are a world-class resume writer with 20 years of experience placing senior sales and business development leaders at top industrial, aerospace, and engineering services companies.
 
 Your process is methodical:
 1. Deeply analyse the job description to extract what the hiring team truly cares about
@@ -64,21 +83,15 @@ Your process is methodical:
 
 Your writing:
 - Mirrors the JD's exact vocabulary (ATS optimisation)
-- Quantifies every achievement (numbers, percentages, scale)
+- Quantifies every achievement (numbers, percentages, deals, quota %)
 - Is tight and impactful — every word earns its place
 - Never fabricates — only reframes and reorders real facts
-- Reads as if a senior human professional wrote it
+- Reads as if a senior human sales leader wrote it, not a bot
 
 Tone: ${userProfile.tone.resume}
 
-BASE RESUME:
-${JSON.stringify(baseResume, null, 2)}`
-    );
-    this._lastTailoredResume = null;
-  }
-
-  async onRun({ job }) {
-    this._lastTailoredResume = null;
+BASE RESUME (${resumeType}):
+${JSON.stringify(this._baseResume, null, 2)}`;
 
     const goal = `Tailor the base resume for this role:
 
@@ -155,7 +168,7 @@ JD ANALYSIS:
 ${input.jdAnalysis}
 
 BASE RESUME:
-${JSON.stringify(baseResume, null, 2)}
+${JSON.stringify(this._baseResume, null, 2)}
 
 Produce the complete tailored resume as a valid JSON object — identical schema to the input.
 Rules:
