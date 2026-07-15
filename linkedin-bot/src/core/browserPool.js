@@ -29,7 +29,7 @@ class BrowserPool {
 
     logger.info('[Browser] Launching Chromium...');
 
-    this._context = await chromium.launchPersistentContext(USER_DATA_DIR, {
+    const launchOpts = {
       headless: process.env.HEADLESS !== 'false',
       args: [
         '--no-sandbox',
@@ -37,12 +37,19 @@ class BrowserPool {
         '--disable-blink-features=AutomationControlled',
         '--disable-infobars',
         '--window-size=1440,900',
+        '--ignore-certificate-errors',
       ],
       userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
       viewport: { width: 1440, height: 900 },
       locale: 'en-US',
       timezoneId: 'America/New_York',
-    });
+    };
+
+    if (process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH) {
+      launchOpts.executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+    }
+
+    this._context = await chromium.launchPersistentContext(USER_DATA_DIR, launchOpts);
 
     // Mask automation fingerprints
     await this._context.addInitScript(() => {
