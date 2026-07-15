@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume – {{NAME}}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: #1a1a1a;
+      background: #fff;
+      padding: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      border-bottom: 2.5px solid #1a365d;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+
+    h1.name {
+      font-size: 22pt;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #1a365d;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .title-line {
+      font-size: 11pt;
+      color: #4a5568;
+      font-family: 'Arial', sans-serif;
+      margin-top: 2px;
+    }
+
+    .contact-line {
+      font-size: 9pt;
+      color: #555;
+      margin-top: 5px;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .contact-line a { color: #2b6cb0; text-decoration: none; }
+    .contact-line span::before { content: ' · '; color: #aaa; }
+    .contact-line span:first-child::before { content: ''; }
+
+    /* ── Sections ── */
+    section { margin-bottom: 14px; }
+
+    h2.section-title {
+      font-size: 10pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #1a365d;
+      font-family: 'Arial', sans-serif;
+      border-bottom: 1px solid #cbd5e0;
+      padding-bottom: 3px;
+      margin-bottom: 8px;
+    }
+
+    /* ── Summary ── */
+    .summary { font-size: 10.5pt; color: #2d3748; line-height: 1.6; }
+
+    /* ── Skills ── */
+    .skills-container { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    .skill-tag {
+      background: #ebf4ff;
+      color: #1a365d;
+      border: 1px solid #bee3f8;
+      border-radius: 3px;
+      padding: 2px 7px;
+      font-size: 8.5pt;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .skill-tag.soft {
+      background: #f0fff4;
+      color: #22543d;
+      border-color: #9ae6b4;
+    }
+
+    .skill-tag.tool {
+      background: #fefcbf;
+      color: #744210;
+      border-color: #f6e05e;
+    }
+
+    /* ── Experience ── */
+    .experience-item { margin-bottom: 11px; }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    .exp-title { font-weight: 700; font-size: 10.5pt; color: #1a202c; }
+    .exp-company { color: #2b6cb0; font-weight: 600; }
+    .exp-location { color: #718096; font-size: 9.5pt; }
+    .exp-dates { font-size: 9pt; color: #718096; white-space: nowrap; font-family: 'Arial', sans-serif; }
+
+    .exp-bullets {
+      margin-top: 4px;
+      padding-left: 16px;
+      color: #2d3748;
+    }
+
+    .exp-bullets li { margin-bottom: 2px; font-size: 10pt; }
+
+    /* ── Education ── */
+    .education-item { margin-bottom: 7px; }
+    .edu-header { display: flex; justify-content: space-between; }
+    .edu-degree { font-weight: 700; font-size: 10.5pt; }
+    .edu-year { color: #718096; font-size: 9pt; font-family: 'Arial', sans-serif; }
+    .edu-school { color: #2b6cb0; font-size: 10pt; }
+    .edu-gpa { color: #718096; font-size: 9.5pt; }
+
+    /* ── Projects ── */
+    .project-item { margin-bottom: 9px; }
+    .project-tech { color: #718096; font-size: 9pt; margin-left: 6px; font-family: 'Arial', sans-serif; }
+    .project-item p { color: #4a5568; font-size: 10pt; margin-top: 2px; }
+    .project-item ul { padding-left: 16px; margin-top: 2px; }
+    .project-item ul li { font-size: 10pt; color: #2d3748; }
+
+    /* ── Certifications ── */
+    .certifications ul { padding-left: 16px; }
+    .certifications ul li { font-size: 10pt; color: #2d3748; margin-bottom: 2px; }
+
+    @media print {
+      body { font-size: 10pt; }
+      h1.name { font-size: 20pt; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="name">{{NAME}}</h1>
+    <div class="title-line">{{TITLE}}</div>
+    <div class="contact-line">
+      <span>{{EMAIL}}</span>
+      <span>{{PHONE}}</span>
+      <span>{{LOCATION}}</span>
+      <span><a href="{{LINKEDIN}}">LinkedIn</a></span>
+      <span><a href="{{PORTFOLIO}}">Portfolio</a></span>
+    </div>
+  </header>
+
+  <section>
+    <h2 class="section-title">Professional Summary</h2>
+    <p class="summary">{{SUMMARY}}</p>
+  </section>
+
+  <section>
+    <h2 class="section-title">Skills</h2>
+    <div class="skills-container">{{SKILLS}}</div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Experience</h2>
+    {{EXPERIENCE}}
+  </section>
+
+  <section>
+    <h2 class="section-title">Education</h2>
+    {{EDUCATION}}
+  </section>
+
+  <section>
+    <h2 class="section-title">Projects</h2>
+    {{PROJECTS}}
+  </section>
+
+  <section class="certifications">
+    <h2 class="section-title">Certifications</h2>
+    {{CERTIFICATIONS}}
+  </section>
+</body>
+</html>

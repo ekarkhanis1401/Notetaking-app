@@ -1,0 +1,213 @@
+{
+  "personal": {
+    "name": "Parag Karkhanis",
+    "title": "VP Sales — Industrial & Manufacturing | Aerospace & Defence | Engineering & Digital Transformation Services",
+    "email": "paragkarkhanis@gmail.com",
+    "phone": "+1 (463) 328-8330",
+    "location": "Carmel, IN",
+    "linkedin": "https://www.linkedin.com/in/paragkarkhanis",
+    "portfolio": "",
+    "github": ""
+  },
+  "summary": "Sales leader with 18+ years opening new accounts and growing revenue in engineering and digital transformation services. Spent most of my career as a hunter — landing first logos in markets where my employer had no presence, rebuilding lapsed relationships, and carrying the deal from a cold CxO conversation through workshops, RFPs, and contract. Strongest work in industrial and heavy machinery, aerospace, and manufacturing, selling ER&D, IIoT and Digital Twin, Industry 4.0, and cloud-enabled engineering. Built a region from zero in the Middle East; done the same kind of zero-to-one work twice since as an advisor to early-stage ventures.",
+  "skills": {
+    "technical": [
+      "New logo acquisition & net-new hunting",
+      "ER&D / Engineering Services",
+      "IIoT & Edge Computing",
+      "Industry 4.0 & Smart Manufacturing",
+      "Digital Twin",
+      "Predictive Maintenance & Connected Equipment",
+      "Cloud (AWS, Azure)",
+      "AI/ML",
+      "PLM & ERP",
+      "VAVE & Technical Publications",
+      "Large-deal structuring",
+      "RFP & MSA negotiation",
+      "P&L ownership"
+    ],
+    "soft": [
+      "CxO relationship management",
+      "Consultative selling",
+      "Pipeline & account planning",
+      "Quota attainment (110%+)",
+      "Team leadership",
+      "Cross-cultural stakeholder management",
+      "Outsourcing & transformation sales"
+    ],
+    "tools": [
+      "Salesforce",
+      "SAP",
+      "Zoho CRM",
+      "MS Office",
+      "CATIA"
+    ]
+  },
+  "experience": [
+    {
+      "company": "Telos Aerospace",
+      "title": "Co-Founding Advisor & Regional Head, US (Part-Time)",
+      "location": "United States",
+      "startDate": "Jan 2026",
+      "endDate": "Present",
+      "bullets": [
+        "Building the US presence for an aerospace engineering and consulting firm serving MRO, OEMs, Tier-1s, and the drone/UAM space — covering go-to-market strategy, partnerships, entity setup, AS9100/FAA certification, and early fundraising.",
+        "Brought five clients onto the panel and developed a $2.5M pipeline within the first few months of engagement."
+      ]
+    },
+    {
+      "company": "Tata Technologies GmbH",
+      "title": "Sales Director, Europe — Industrial & Heavy Machinery",
+      "location": "Germany",
+      "startDate": "Jan 2025",
+      "endDate": "Jul 2025",
+      "bullets": [
+        "Carried a €3.5M new-business quota across DACH and wider Europe, hunting net-new logos and reactivating dormant accounts in heavy machinery.",
+        "Won a Digital Twin program with a European shipbuilding OEM and an IIoT/Edge engagement in metal processing — the first new logos of the year — by running multi-day discovery workshops with presales.",
+        "Secured a $4.3M aircraft digitization engagement against entrenched incumbents."
+      ]
+    },
+    {
+      "company": "Custiv",
+      "title": "Strategic Advisor & Consultant, Europe (Part-Time)",
+      "location": "Europe (Remote)",
+      "startDate": "Feb 2024",
+      "endDate": "Dec 2024",
+      "bullets": [
+        "Shaped the Europe entry strategy for a manufacturing-outsourcing platform and opened its first five customers, building an $8M pipeline.",
+        "Positioned the platform's end-to-end value — RFQ formulation, cost-optimized sourcing through an Indian manufacturing network, and managed on-time delivery."
+      ]
+    },
+    {
+      "company": "Collins Aerospace",
+      "title": "Aftermarket Sales & Contracts Manager",
+      "location": "Frankfurt, Germany",
+      "startDate": "Aug 2023",
+      "endDate": "Feb 2024",
+      "bullets": [
+        "Managed a $5M+ portfolio of airline and MRO clients across APAC, Europe, and the Middle East, structuring long-term maintenance and exchange contracts.",
+        "Grew market penetration approximately 15% in APAC and MENA by opening new senior-procurement and C-suite relationships and competing on value rather than price."
+      ]
+    },
+    {
+      "company": "L&T Technology Services",
+      "title": "Director, Business Development — Transportation (DACH)",
+      "location": "Frankfurt, Germany",
+      "startDate": "Sep 2022",
+      "endDate": "Mar 2023",
+      "bullets": [
+        "Ran a $6.5M+ engineering and IT services portfolio across Schaeffler, Continental, and Mercedes-Benz, growing it 15% year over year.",
+        "Tied cloud, mobility, and IIoT engineering offerings to customers' electrification and digitalization plans, turning executive conversations into qualified pipeline."
+      ]
+    },
+    {
+      "company": "Tata Technologies",
+      "title": "Country Head — Middle East & North Africa",
+      "location": "Dubai, UAE",
+      "startDate": "Apr 2018",
+      "endDate": "May 2022",
+      "bullets": [
+        "Set up the MENA business from scratch and grew it past $4M in two years against a $4.5M quota, owning a $7M P&L and leading a team of 3 direct and 15 indirect reports.",
+        "Landed a $2.5M IIoT/Edge platform deal with a large heavy-machinery conglomerate — a milestone win that proved out platform-level selling in the region.",
+        "Added a $3.1M greenfield consulting and technology-transfer engagement with a Saudi aerospace organization and a $2.4M ERP program with an Asian excavator manufacturer.",
+        "Grew the client base approximately 25% through disciplined account planning, profiling, and margin-led targeting across manufacturing and energy clients."
+      ]
+    },
+    {
+      "company": "Tata Technologies",
+      "title": "Senior Manager — Strategic Client Acquisition",
+      "location": "Pune, India",
+      "startDate": "Jun 2015",
+      "endDate": "Mar 2018",
+      "bullets": [
+        "Sold remotely into North American industrial majors — Caterpillar, John Deere, and CNH — generating approximately $1.7M a year in design engineering, PLM upgrades, VAVE, and aftermarket technical publications, engaging VP Engineering, CPO, CIO, and CTO stakeholders.",
+        "Closed a flagship $3.1M Industry 4.0 shop-floor transformation with a major Indian A&D PSU, steering a complex government sales cycle through to contract.",
+        "Carried $3.5M+ in annual new sales overall — including Boeing and Airbus accounts — and grew portfolio revenue approximately 12% a year."
+      ]
+    },
+    {
+      "company": "Tata Technologies",
+      "title": "Key Account Manager — Aerospace & Defence",
+      "location": "Bengaluru, India",
+      "startDate": "Jun 2013",
+      "endDate": "May 2015",
+      "bullets": [
+        "Managed Airbus, Boeing, and Thales accounts and closed a $2M+ engineering services deal with a leading Indian A&D PSU, building pipeline through aerospace exhibitions and executive networking."
+      ]
+    },
+    {
+      "company": "Maini Precision Products",
+      "title": "Key Account Manager — Aerospace & Defence",
+      "location": "Bengaluru, India",
+      "startDate": "Jul 2011",
+      "endDate": "Jun 2013",
+      "bullets": [
+        "Led sales for a $12M precision-manufacturing portfolio and positioned Maini as India's first private-sector Tier-1 supplier to both Airbus and Boeing — a landmark account win."
+      ]
+    },
+    {
+      "company": "Tata Advanced Systems",
+      "title": "Assistant Manager — Business Development & PMO",
+      "location": "Hyderabad, India",
+      "startDate": "May 2010",
+      "endDate": "Jul 2011",
+      "bullets": [
+        "Supported business capture for a $350M US defence helicopter sub-assembly greenfield program (Sikorsky S-92) and managed programs including the C-130J, across three new facility setups."
+      ]
+    },
+    {
+      "company": "TAL Manufacturing Solutions (Tata Motors)",
+      "title": "Assistant Manager — Business Development & PMO, Aerospace & Defence",
+      "location": "Pune, India",
+      "startDate": "May 2007",
+      "endDate": "May 2010",
+      "bullets": [
+        "Helped capture a $275M US commercial aerospace OEM sub-assembly greenfield program, secured $5M+ in direct Boeing and Airbus contracts, and led project management for the Boeing 787 Dreamliner Floor Beam program."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "BITS Pilani",
+      "degree": "Executive MBA, Consulting Management",
+      "location": "India",
+      "graduationYear": "2018",
+      "gpa": "",
+      "honours": "Completed part-time while working",
+      "relevantCourses": []
+    },
+    {
+      "institution": "Pune University",
+      "degree": "MBA, Production & Materials Management",
+      "location": "Pune, India",
+      "graduationYear": "2007",
+      "gpa": "",
+      "honours": "",
+      "relevantCourses": []
+    },
+    {
+      "institution": "Pune University",
+      "degree": "B.E., Mechanical Engineering",
+      "location": "Pune, India",
+      "graduationYear": "2004",
+      "gpa": "",
+      "honours": "",
+      "relevantCourses": []
+    }
+  ],
+  "projects": [],
+  "certifications": [],
+  "languages": [
+    { "language": "English", "proficiency": "Fluent" },
+    { "language": "Hindi", "proficiency": "Fluent" },
+    { "language": "Marathi", "proficiency": "Native" },
+    { "language": "German", "proficiency": "Basic" }
+  ],
+  "selectedAchievements": [
+    "Consistently delivered 110%+ of quota across roles spanning India, the Middle East, and Europe; recognized with multiple top-performer awards.",
+    "Built the Middle East region from zero to $4M+ in two years against a $4.5M quota, owning a $7M P&L and a team of 18.",
+    "Closed $20M+ in technology and consulting engagements, including a $2.5M IIoT/Edge platform deal and a $3.1M Industry 4.0 shop-floor transformation.",
+    "Held trusted-advisor relationships at Caterpillar, John Deere, and CNH, generating approximately $1.7M a year in ER&D, PLM, and aftermarket work at VP, CIO, and CTO level.",
+    "Helped capture two greenfield aerospace manufacturing programs (US defence helicopter and commercial OEM sub-assembly), and managed the Boeing 787 Floor Beam program."
+  ]
+}
