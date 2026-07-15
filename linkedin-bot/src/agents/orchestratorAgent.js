@@ -183,6 +183,7 @@ Start with dispatch_job_scout to discover jobs, then for each discovered job: ta
       case 'dispatch_job_scout': {
         try {
           this._discoveredJobs = await this._agents.scout.run();
+          await browserPool.closeExtraPages();
           state.setJobs(this._discoveredJobs);
           if (this._discoveredJobs.length === 0) {
             return 'No jobs found. Instruct the user to save jobs on LinkedIn and retry.';
@@ -237,9 +238,11 @@ Start with dispatch_job_scout to discover jobs, then for each discovered job: ta
             coverLetterText: jobRecord?.coverLetterText,
             coverLetterPdfPath: jobRecord?.coverLetterPdfPath,
           });
+          await browserPool.closeExtraPages();
           state.updateJob(job.jobId, { applied });
           return `ApplicationAgent: applied=${applied} for ${job.title} @ ${job.company}`;
         } catch (err) {
+          await browserPool.closeExtraPages();
           return `ApplicationAgent failed for ${input.jobId}: ${err.message}`;
         }
       }
@@ -252,11 +255,13 @@ Start with dispatch_job_scout to discover jobs, then for each discovered job: ta
         if (!job) return `Job ${input.jobId} not found.`;
         try {
           const { recruiter } = await this._agents.recruiterHunter.run({ job });
+          await browserPool.closeExtraPages();
           state.updateJob(job.jobId, { recruiter });
           return recruiter
             ? `RecruiterHunterAgent found: ${recruiter.name ?? 'Unknown'} (${recruiter.title ?? 'Recruiter'}) at ${job.company}`
             : `RecruiterHunterAgent: no recruiter found for ${job.company}`;
         } catch (err) {
+          await browserPool.closeExtraPages();
           return `RecruiterHunterAgent failed for ${input.jobId}: ${err.message}`;
         }
       }
@@ -271,9 +276,11 @@ Start with dispatch_job_scout to discover jobs, then for each discovered job: ta
         if (!jobRecord?.recruiter) return `No recruiter found for ${input.jobId} — run dispatch_recruiter_hunter first.`;
         try {
           const { connected, messageSent } = await this._agents.outreach.run({ job, recruiter: jobRecord.recruiter });
+          await browserPool.closeExtraPages();
           state.updateJob(job.jobId, { connected, messageSent });
           return `OutreachAgent: connected=${connected}, messageSent=${messageSent} for ${job.title} @ ${job.company}`;
         } catch (err) {
+          await browserPool.closeExtraPages();
           return `OutreachAgent failed for ${input.jobId}: ${err.message}`;
         }
       }
@@ -314,6 +321,7 @@ Start with dispatch_job_scout to discover jobs, then for each discovered job: ta
         const min = parseInt(process.env.DELAY_BETWEEN_JOBS_MIN || '30', 10);
         const max = parseInt(process.env.DELAY_BETWEEN_JOBS_MAX || '90', 10);
         this._log(`Cooling down ${min}–${max}s before next job...`);
+        await browserPool.closeExtraPages();
         await jobCooldown();
         return `Cooldown complete.`;
       }

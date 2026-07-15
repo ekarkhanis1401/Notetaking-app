@@ -60,6 +60,15 @@ class BrowserPool {
     });
 
     this._activePage = await this._context.newPage();
+
+    // Auto-close any extra tabs LinkedIn spawns (popups, external links, post-apply pages)
+    this._context.on('page', async (extraPage) => {
+      if (extraPage === this._activePage) return;
+      await extraPage.waitForLoadState('domcontentloaded').catch(() => {});
+      await extraPage.close().catch(() => {});
+      logger.dim('[Browser] Auto-closed extra tab.');
+    });
+
     this._initialized = true;
     logger.success('[Browser] Chromium ready.');
   }
@@ -124,6 +133,20 @@ class BrowserPool {
   async getPage() {
     if (!this._initialized) await this.init();
     return this._activePage;
+  }
+
+  // ── Tab cleanup ──────────────────────────────────────────────────────────────
+  async closeExtraPages() {
+    if (!this._context) return;
+    const pages = this._context.pages();
+    let closed = 0;
+    for (const p of pages) {
+      if (p !== this._activePage) {
+        await p.close().catch(() => {});
+        closed++;
+      }
+    }
+    if (closed > 0) logger.dim(`[Browser] Closed ${closed} extra tab(s).`);
   }
 
   // ── Teardown ─────────────────────────────────────────────────────────────────
