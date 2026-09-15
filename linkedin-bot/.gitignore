@@ -1,0 +1,17 @@
+# Secrets — NEVER commit these
+.env
+
+# Browser session data (contains cookies / login tokens)
+browser-data/
+
+# Generated output
+output/resumes/
+output/cover-letters/
+output/logs/
+output/applied-jobs.json
+
+# Excel tracker (lives on your Desktop — not in the repo)
+*.xlsx
+
+# Node modules
+node_modules/

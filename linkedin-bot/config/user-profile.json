@@ -1,0 +1,108 @@
+{
+  "applicant": {
+    "name": "Parag Karkhanis",
+    "currentRole": "VP Sales — Industrial & Manufacturing | Aerospace & Defence | Engineering & Digital Transformation Services",
+    "yearsOfExperience": 18,
+    "targetRoles": [
+      "VP Sales",
+      "Senior Director Sales",
+      "Director Business Development",
+      "VP Business Development",
+      "Sales Director",
+      "Head of Sales",
+      "Regional Sales Director",
+      "Director of Sales — Aerospace",
+      "VP Sales Engineering Services"
+    ],
+    "targetIndustries": [
+      "Aerospace & Defence",
+      "Industrial & Heavy Machinery",
+      "Engineering Services",
+      "Digital Transformation",
+      "Manufacturing",
+      "MRO / Aftermarket",
+      "IIoT / Industry 4.0"
+    ],
+    "preferredLocations": [
+      "Remote",
+      "Carmel, IN",
+      "Indianapolis, IN",
+      "United States (open to relocation)"
+    ],
+    "salaryExpectation": "$180,000 – $220,000 base + commission",
+    "noticePeriod": "2 weeks",
+    "workAuthorization": "Authorized to work in the US (L-2S visa, no sponsorship required). Open to relocation.",
+    "willingToRelocate": true
+  },
+  "resumeSelection": {
+    "defaultResume": "config/resume.json",
+    "aerospaceResume": "config/resume-aerospace.json",
+    "aerospaceKeywords": [
+      "aerospace",
+      "defence",
+      "defense",
+      "MRO",
+      "OEM",
+      "Tier-1",
+      "aviation",
+      "aircraft",
+      "Boeing",
+      "Airbus",
+      "Collins",
+      "Honeywell",
+      "Lockheed",
+      "Raytheon",
+      "Northrop",
+      "GE Aviation",
+      "Pratt",
+      "Safran",
+      "A&D",
+      "FAA",
+      "AS9100",
+      "UAM",
+      "drone",
+      "helicopter",
+      "Tier 1",
+      "aftermarket"
+    ]
+  },
+  "tone": {
+    "resume": "professional, achievement-oriented, quantified, hunter-focused — emphasise zero-to-one wins, quota performance, and large deal closures",
+    "coverLetter": "warm, confident, direct — senior sales professional who has done exactly this job before. Story-led, not generic. References specific deals or customers where relevant. Never sounds like a template.",
+    "recruiterMessage": "personable, peer-to-peer — one senior sales professional reaching out to another. Specific, brief, confident. One easy ask at the end."
+  },
+  "connectionMessage": {
+    "style": "brief and human — 2-3 sentences max, mentions the specific role and one genuine observation",
+    "mentionMutualInterest": true,
+    "mentionSpecificRole": true
+  },
+  "recruiterMessageTemplate": {
+    "maxWords": 120,
+    "openWith": "a specific observation about the company's market position, a recent win, or what makes the role interesting — NOT a generic opener",
+    "includeValueProp": true,
+    "closeWith": "a single easy ask — 15-minute call or just asking for their thoughts on the role"
+  },
+  "jobFilters": {
+    "skipIfAlreadyApplied": true,
+    "skipIfJobOlderThanDays": 21,
+    "skipKeywords": [
+      "unpaid",
+      "internship",
+      "entry level",
+      "junior",
+      "commission only",
+      "no experience",
+      "1-2 years",
+      "2-3 years",
+      "fresh graduate"
+    ],
+    "requireKeywords": [],
+    "minSeniority": "director"
+  },
+  "application": {
+    "coverLetterRequired": true,
+    "attachResumePDF": true,
+    "answerScreeningQuestions": true,
+    "useEasyApplyOnly": true
+  }
+}
